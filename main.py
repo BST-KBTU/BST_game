@@ -1,6 +1,7 @@
 import pygame, sys
 import numpy as np
 import random
+from dijkstra import find
 from char import  *  # * - same folder
 from maze_pacman import  *
 vec = pygame.math.Vector2
@@ -24,8 +25,8 @@ def draw_text(words, screen, pos, size, color, font_name, centered=False):
 
 def menu():
 	pygame.mixer.init()
-	pygame.mixer.music.load('intro.mp3')
-	pygame.mixer.music.play(-1, 0.0)
+	# pygame.mixer.music.load('intro.mp3')
+	# pygame.mixer.music.play(-1, 0.0)
 
 	while True:
 		screen.fill((Yellow))
@@ -61,16 +62,59 @@ def second_page():
 		draw_text('PRESS SHIFT', screen, [180, 240], 32, White, Font)
 		pygame.display.update()
 
+
+class Enemy():
+	x = 0
+	y = 0
+	goal_x = None
+	goal_y = None
+	def __init__(self):
+		global pm_maze
+		self.x = None
+		self.y = None
+		self.goal_x = None
+		self.goal_y = None
+		while self.x is None or pm_maze[self.y][self.x] != 5:
+			self.x = random.randint(0,len(pm_maze[0])-1)
+			self.y = random.randint(0,len(pm_maze)-1)
+		print("chosen start position", self.x, self.y)
+
+	def find_new_goal(self):
+		global pm_maze
+		while self.goal_x is None or pm_maze[self.goal_y][self.goal_x] not in [1,3] or (self.goal_x == self.x and self.goal_y == self.y):
+			self.goal_x = random.randint(0,len(pm_maze[0])-1)
+			self.goal_y = random.randint(0,len(pm_maze)-1)
+		print("chosen new goal", self.goal_x, self.goal_y, "there we have", pm_maze[self.goal_y][self.goal_x])
+
+	def move(self):
+		if self.goal_x is None or self.goal_x == self.x and self.goal_y == self.y:
+			self.find_new_goal()
+		next_x, next_y = find(pm_maze,self.x, self.y, self.goal_x, self.goal_y)
+		if next_x is not None:
+			self.x, self.y = next_x, next_y
+
+
+enemies = []
+enemies.append(Enemy())
+enemies.append(Enemy())
+enemies.append(Enemy())
+enemies.append(Enemy())
+
+
 def game():
 #Game loop 
 	global a, b, da, db, z, t, dz, dx, dy, dt, x, y, pm_open_left, pm_open, pm_open_down, pm_open_left, pm_open_up, block, logo, background, ghost, ghost2, look_open_up, look_open_down, look_open_left
 	
-	pygame.mixer.init()
-	pygame.mixer.music.load('wap.mp3')
-	pygame.mixer.music.play(-1, 0.0)
+	# pygame.mixer.init()
+	# pygame.mixer.music.load('wap.mp3')
+	# pygame.mixer.music.play(-1, 0.0)
 	
 	while True:
-	 	###############################Ghost 1 boundaries############################################
+
+		for enemy in enemies:
+			enemy.move()
+
+		###############################Ghost 1 boundaries############################################
 		save_z, save_t = z,t
 
 		z = z + dz
@@ -303,8 +347,12 @@ def game():
 		else:
 			screen.blit(pm_open,(x,y))
 		
-		screen.blit(ghost1, (z, t))
-		screen.blit(ghost2, (a, b))
+		# screen.blit(ghost1, (z, t))
+		# screen.blit(ghost2, (a, b))
+
+		for enemy in enemies:
+			screen.blit(ghost1, (enemy.x * pm_size, enemy.y * pm_size))
+
 		draw_text('Current Score: {}'.format(summ),screen, [65,0], 16, White, Font)
 		draw_text('High Score:0', screen, [425,0], 16, White, Font)
 
