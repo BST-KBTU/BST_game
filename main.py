@@ -69,7 +69,6 @@ def second_page():
 		draw_text('PRESS SHIFT', screen, [180, 240], 32, White, Font)
 		pygame.display.update()
 
-
 class Enemy():
 	x = 0
 	y = 0
@@ -84,14 +83,14 @@ class Enemy():
 		while self.x is None or pm_maze[self.y][self.x] != 5:
 			self.x = random.randint(0,len(pm_maze[0])-1)
 			self.y = random.randint(0,len(pm_maze)-1)
-		print("chosen start position", self.x, self.y)
+	#	print("chosen start position", self.x, self.y)
 
 	def find_new_goal(self):
 		global pm_maze
-		while self.goal_x is None or pm_maze[self.goal_y][self.goal_x] not in [1,4] or (self.goal_x == self.x and self.goal_y == self.y):
+		while self.goal_x is None or pm_maze[self.goal_y][self.goal_x] not in [1, 3, 4] or (self.goal_x == self.x and self.goal_y == self.y):
 			self.goal_x = random.randint(0,len(pm_maze[0])-1)
 			self.goal_y = random.randint(0,len(pm_maze)-1)
-		print("chosen new goal", self.goal_x, self.goal_y, "there we have", pm_maze[self.goal_y][self.goal_x])
+	#	print("chosen new goal", self.goal_x, self.goal_y, "there we have", pm_maze[self.goal_y][self.goal_x])
 
 	def get_coords(self):
 		return self.x*20, self.y*20
@@ -102,6 +101,7 @@ class Enemy():
 		next_x, next_y = find(pm_maze,self.x, self.y, self.goal_x, self.goal_y)
 		if next_x is not None:
 			self.x, self.y = next_x, next_y
+
 
 
 enemies1 = []
@@ -118,7 +118,7 @@ enemies4.append(Enemy())
 
 def game():
 #Game loop 
-	global a, b, da, db, z, t, dz, dx, dy, dt, x, y, pm_open_left, pm_open, pm_open_down, pm_open_left, pm_open_up, block, logo, background, ghost, ghost2, look_open_up, look_open_down, look_open_left
+	global dx, dy, dt, x, y, pm_open_left, pm_open, pm_open_down, pm_open_left, pm_open_up, block, logo, background, ghost, ghost2, look_open_up, look_open_down, look_open_left
 	
 	#pygame.mixer.init()
 	#pygame.mixer.music.load('wap.mp3')
@@ -150,10 +150,25 @@ def game():
 						collide = True				
 
 
-		"""for enemy in enemies:
-			print((rect1.x, rect1.y),enemy.get_coords())
+		for enemy in enemies1:
+			#print((rect1.x, rect1.y),enemy.get_coords())
 			if enemy.get_coords() == (rect1.x, rect1.y):
-				print('end game')"""
+				print('end game')
+
+		for enemy in enemies2:
+			#print((rect1.x, rect1.y),enemy.get_coords())
+			if enemy.get_coords() == (rect1.x, rect1.y):
+				print('end game')
+
+		for enemy in enemies3:
+			#print((rect1.x, rect1.y),enemy.get_coords())
+			if enemy.get_coords() == (rect1.x, rect1.y):
+				print('end game')
+
+		for enemy in enemies4:
+			#print((rect1.x, rect1.y),enemy.get_coords())
+			if enemy.get_coords() == (rect1.x, rect1.y):
+				print('end game')
 
 
 		if collide:
