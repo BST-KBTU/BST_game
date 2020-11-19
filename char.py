@@ -30,6 +30,8 @@ logo1 = pygame.image.load("logo1.png")
 
 ghost1 = pygame.image.load('Pacman_red 1.png')
 ghost2 = pygame.image.load('Pacman_pink.png')
+ghost3 = pygame.image.load('Pacman_orange.png')
+ghost4 = pygame.image.load('Pacman_mint.png')
 
 pm_open = pygame.transform.scale(pm_open, (pm_size, pm_size))
 pm_open_up = pygame.transform.scale(pm_open_up, (pm_size, pm_size))
@@ -38,6 +40,8 @@ pm_open_left = pygame.transform.scale(pm_open_left, (pm_size, pm_size))
 block = pygame.transform.scale(block,(pm_size, pm_size))
 ghost1 = pygame.transform.scale(ghost1,(pm_size, pm_size))
 ghost2 = pygame.transform.scale(ghost2, (pm_size, pm_size))
+ghost3 = pygame.transform.scale(ghost3, (pm_size, pm_size))
+ghost4 = pygame.transform.scale(ghost4, (pm_size, pm_size))
 
 look_open_up = False
 look_open_down = False
@@ -47,13 +51,3 @@ x = 40
 y = 100
 dx = 0 # horizontal speed
 dy = 0 # vertical speed 
-
-z = 300 #coordinate of the ghost 
-t = 300 #coordinate of the ghost
-dz = 0
-dt = 0
-
-a = 280
-b = 280
-da = 0
-db = 0
