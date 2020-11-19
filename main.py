@@ -23,10 +23,17 @@ def draw_text(words, screen, pos, size, color, font_name, centered=False):
 	text = font.render(words, False, color)
 	screen.blit(text,pos)
 
+
+def get_index_map_by_coord(x,y):
+	index_x = x//20
+	index_y = y//20
+	return index_x, index_y
+
+
 def menu():
-	pygame.mixer.init()
-	# pygame.mixer.music.load('intro.mp3')
-	# pygame.mixer.music.play(-1, 0.0)
+	#pygame.mixer.init()
+	#pygame.mixer.music.load('intro.mp3')
+	#pygame.mixer.music.play(-1, 0.0)
 
 	while True:
 		screen.fill((Yellow))
@@ -81,10 +88,13 @@ class Enemy():
 
 	def find_new_goal(self):
 		global pm_maze
-		while self.goal_x is None or pm_maze[self.goal_y][self.goal_x] not in [1,3] or (self.goal_x == self.x and self.goal_y == self.y):
+		while self.goal_x is None or pm_maze[self.goal_y][self.goal_x] not in [1,4] or (self.goal_x == self.x and self.goal_y == self.y):
 			self.goal_x = random.randint(0,len(pm_maze[0])-1)
 			self.goal_y = random.randint(0,len(pm_maze)-1)
 		print("chosen new goal", self.goal_x, self.goal_y, "there we have", pm_maze[self.goal_y][self.goal_x])
+
+	def get_coords(self):
+		return 	self.x*20, self.y*20
 
 	def move(self):
 		if self.goal_x is None or self.goal_x == self.x and self.goal_y == self.y:
@@ -99,105 +109,24 @@ enemies.append(Enemy())
 enemies.append(Enemy())
 enemies.append(Enemy())
 enemies.append(Enemy())
+enemies.append(Enemy())
 
 
 def game():
 #Game loop 
 	global a, b, da, db, z, t, dz, dx, dy, dt, x, y, pm_open_left, pm_open, pm_open_down, pm_open_left, pm_open_up, block, logo, background, ghost, ghost2, look_open_up, look_open_down, look_open_left
 	
-	# pygame.mixer.init()
-	# pygame.mixer.music.load('wap.mp3')
-	# pygame.mixer.music.play(-1, 0.0)
+	#pygame.mixer.init()
+	#pygame.mixer.music.load('wap.mp3')
+	#pygame.mixer.music.play(-1, 0.0)
 	
 	while True:
 
 		for enemy in enemies:
 			enemy.move()
 
-		###############################Ghost 1 boundaries############################################
-		save_z, save_t = z,t
-
-		z = z + dz
-		rect3 = pygame.Rect(z,t,pm_size,pm_size)
-		collide = False
-		for i in range(len(pm_maze)):
-			for j in range(len(pm_maze[i])):
-				if pm_maze[i][j] == 0 or pm_maze[i][j] == 6 or pm_maze[i][j] == 7 or pm_maze[i][j] == 8:
-					rect2 = pygame.Rect(j*pm_size,i*pm_size,pm_size,pm_size)
-					if rect3.colliderect(rect2):
-						collide = True
-				elif pm_maze[i][j] == 1 or pm_maze[i][j] == 4:
-					rect2 = pygame.Rect(j*pm_size,i*pm_size,pm_size,pm_size)
-					if pm_maze[i][j] == 5:
-						if rect3.colliderect(rect2):
-							collide = True
-							pm_maze[i][j] == 8
 
 
-		if collide:
-			z = save_z
-			dz = 0
-
-		t = t + dt
-		rect3 = pygame.Rect(z, t, pm_size, pm_size)
-		collide = False
-		for i in range(len(pm_maze)):
-			for j in range(len(pm_maze[i])):
-				if pm_maze[i][j] == 0 or pm_maze[i][j] == 6 or pm_maze[i][j] == 7:
-					rect2 = pygame.Rect(j*pm_size, i*pm_size, pm_size, pm_size)
-					if rect3.colliderect(rect2):
-						collide = True
-
-		if collide:
-			t = save_t
-			dt = 0
-
-		for number in range(100000):
-			number = random.randint(-2, 1)
-			if number == -2:
-				dt, dz = 20, 0
-			elif number == -1:
-				dt, dz = -20, 0
-			elif number == 0:
-				dt, dz = 0, 20
-			elif number == 1:
-				dt, dz = 0, -20
-
-	####################################Ghost2 boundaries#######################################
-		save_a, save_b = a, b
-
-		a = a + da
-		rect3 = pygame.Rect(a, b, pm_size, pm_size)
-		collide = False
-		rect3 = pygame.Rect(a, b, pm_size, pm_size)
-		collide = False
-		for i in range(len(pm_maze)):
-			for j in range(len(pm_maze[i])):
-				if pm_maze[i][j] == 0 or pm_maze[i][j] == 6 or pm_maze[i][j] == 7:
-					rect2 = pygame.Rect(j*pm_size,i*pm_size,pm_size,pm_size)
-					if rect3.colliderect(rect2):
-						collide = True
-
-
-		if collide:
-			a = save_a
-			da = 0
-
-		b = b + db
-		rect3 = pygame.Rect(a, b, pm_size, pm_size)
-		collide = False
-		for i in range(len(pm_maze)):
-			for j in range(len(pm_maze[i])):
-				if pm_maze[i][j] == 0 or pm_maze[i][j] == 6 or pm_maze[i][j] == 7:
-					rect2 = pygame.Rect(j*pm_size, i*pm_size, pm_size, pm_size)
-					if rect3.colliderect(rect2):
-						collide = True
-
-		if collide:
-			b = save_b
-			db = 0
-
-		###############################Pacman boundaries#########################################	
 		save_x, save_y = x, y 
 
 		y = y + dy
@@ -208,7 +137,10 @@ def game():
 				if pm_maze[i][j] == 0 or pm_maze[i][j] == 5:
 					rect2 = pygame.Rect(j*pm_size, i*pm_size, pm_size, pm_size)
 					if rect1.colliderect(rect2):
-						collide = True
+						collide = True				
+		#for enemy in enemies:
+		#	if enemy.get_coords() == rect.get_coords
+
 
 		if collide:
 			y = save_y
@@ -310,13 +242,13 @@ def game():
 					look_open_left = False
 					look_open_up = False
 				elif event.key == pygame.K_LEFT:
-					dx = -20
-					dy = 0
-					da = 20
-					db = 0
-					look_open_left = True
-					look_open_up = False
-					look_open_down = False
+					i_pac,j_pac = get_index_map_by_coord(x-20,y)		
+					if pm_maze[i_pac][j_pac] in [1,3,4]:
+						dx = -20
+						dy = 0
+						look_open_left = True
+						look_open_up = False
+						look_open_down = False
 				elif event.key == pygame.K_RIGHT:
 					dx = 20
 					dy = 0
@@ -351,6 +283,7 @@ def game():
 		# screen.blit(ghost2, (a, b))
 
 		for enemy in enemies:
+			screen.blit(ghost2, (enemy.x * pm_size, enemy.y * pm_size))
 			screen.blit(ghost1, (enemy.x * pm_size, enemy.y * pm_size))
 
 		draw_text('Current Score: {}'.format(summ),screen, [65,0], 16, White, Font)
@@ -358,8 +291,6 @@ def game():
 
 		pygame.display.flip()
 		timer.tick(FPS)
-	#pygame.display.update()
+	pygame.display.update()
 
 menu()
-scores_maximum.append(scores_max)
-print(scores_maximum)
