@@ -94,7 +94,7 @@ class Enemy():
 		print("chosen new goal", self.goal_x, self.goal_y, "there we have", pm_maze[self.goal_y][self.goal_x])
 
 	def get_coords(self):
-		return 	self.x*20, self.y*20
+		return self.x*20, self.y*20
 
 	def move(self):
 		if self.goal_x is None or self.goal_x == self.x and self.goal_y == self.y:
@@ -104,12 +104,16 @@ class Enemy():
 			self.x, self.y = next_x, next_y
 
 
-enemies = []
-enemies.append(Enemy())
-enemies.append(Enemy())
-enemies.append(Enemy())
-enemies.append(Enemy())
-enemies.append(Enemy())
+enemies1 = []
+enemies2 = []
+enemies3 = []
+enemies4 = []
+
+enemies1.append(Enemy())
+enemies2.append(Enemy())
+enemies3.append(Enemy())
+enemies4.append(Enemy())
+# enemies.append(Enemy())
 
 
 def game():
@@ -122,7 +126,13 @@ def game():
 	
 	while True:
 
-		for enemy in enemies:
+		for enemy in enemies1:
+			enemy.move()
+		for enemy in enemies2:
+			enemy.move()
+		for enemy in enemies3:
+			enemy.move()
+		for enemy in enemies4:
 			enemy.move()
 
 
@@ -138,8 +148,12 @@ def game():
 					rect2 = pygame.Rect(j*pm_size, i*pm_size, pm_size, pm_size)
 					if rect1.colliderect(rect2):
 						collide = True				
-		#for enemy in enemies:
-		#	if enemy.get_coords() == rect.get_coords
+
+
+		"""for enemy in enemies:
+			print((rect1.x, rect1.y),enemy.get_coords())
+			if enemy.get_coords() == (rect1.x, rect1.y):
+				print('end game')"""
 
 
 		if collide:
@@ -224,39 +238,41 @@ def game():
 		for event in pygame.event.get(): 
 			if event.type == pygame.QUIT:
 				quit()
+
 			elif event.type == pygame.KEYDOWN:
+
 				if event.key == pygame.K_UP:
-					dx = 0
-					dy = -20
-					da = 0
-					db = 20
-					look_open_up = True
-					look_open_left = False
-					look_open_down = False
+					j_pac,i_pac = get_index_map_by_coord(x, y-20)
+					if pm_maze[i_pac][j_pac] in [1, 3, 4]:
+						dx = 0
+						dy = -20
+						look_open_up = True
+						look_open_left = False
+						look_open_down = False
 				elif event.key == pygame.K_DOWN:
-					dx = 0
-					dy = 20
-					da = 0
-					db = -20
-					look_open_down = True
-					look_open_left = False
-					look_open_up = False
+					j_pac,i_pac = get_index_map_by_coord(x, y+20)
+					if pm_maze[i_pac][j_pac] in [1, 3, 4]:
+						dx = 0
+						dy = 20
+						look_open_down = True
+						look_open_left = False
+						look_open_up = False
 				elif event.key == pygame.K_LEFT:
-					i_pac,j_pac = get_index_map_by_coord(x-20,y)		
-					if pm_maze[i_pac][j_pac] in [1,3,4]:
+					j_pac,i_pac = get_index_map_by_coord(x-20, y)
+					if pm_maze[i_pac][j_pac] in [1, 3, 4]:
 						dx = -20
 						dy = 0
 						look_open_left = True
 						look_open_up = False
 						look_open_down = False
 				elif event.key == pygame.K_RIGHT:
-					dx = 20
-					dy = 0
-					da = -20
-					db = 0
-					look_open_left = False
-					look_open_up = False
-					look_open_down = False
+					j_pac, i_pac = get_index_map_by_coord(x+20, y)
+					if pm_maze[i_pac][j_pac] in [1, 3, 4]:
+						dx = 20
+						dy = 0
+						look_open_left = False
+						look_open_up = False
+						look_open_down = False
 
 
 		for i in range(len(pm_maze)):
@@ -282,9 +298,14 @@ def game():
 		# screen.blit(ghost1, (z, t))
 		# screen.blit(ghost2, (a, b))
 
-		for enemy in enemies:
-			screen.blit(ghost2, (enemy.x * pm_size, enemy.y * pm_size))
+		for enemy in enemies1:
 			screen.blit(ghost1, (enemy.x * pm_size, enemy.y * pm_size))
+		for enemy in enemies2:
+			screen.blit(ghost2, (enemy.x * pm_size, enemy.y * pm_size))
+		for enemy in enemies3:
+			screen.blit(ghost3, (enemy.x * pm_size, enemy.y * pm_size))
+		for enemy in enemies4:
+			screen.blit(ghost4, (enemy.x * pm_size, enemy.y * pm_size))
 
 		draw_text('Current Score: {}'.format(summ),screen, [65,0], 16, White, Font)
 		draw_text('High Score:0', screen, [425,0], 16, White, Font)
