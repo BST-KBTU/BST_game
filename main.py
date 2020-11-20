@@ -16,24 +16,22 @@ timer = pygame.time.Clock()
 
 coin = []
 scores = []
-scores_maximum = []
+lives = [1 ,1 ,1]
 
 def draw_text(words, screen, pos, size, color, font_name, centered=False):
 	font = pygame.font.SysFont(font_name, size)
 	text = font.render(words, False, color)
 	screen.blit(text,pos)
 
-
-def get_index_map_by_coord(x,y):
+def get_index(x,y):
 	index_x = x//20
 	index_y = y//20
 	return index_x, index_y
 
-
 def menu():
-	#pygame.mixer.init()
-	#pygame.mixer.music.load('intro.mp3')
-	#pygame.mixer.music.play(-1, 0.0)
+	pygame.mixer.init()
+	pygame.mixer.music.load('intro.mp3')
+	pygame.mixer.music.play(-1, 0.0)
 
 	while True:
 		screen.fill((Yellow))
@@ -69,6 +67,36 @@ def second_page():
 		draw_text('PRESS SHIFT', screen, [180, 240], 32, White, Font)
 		pygame.display.update()
 
+def close():
+	while True:
+		screen.fill((Black))
+		for event in pygame.event.get():
+			if event.type == pygame.QUIT:
+				pygame.display.quit()
+				sys.exit()
+		screen.blit(logo1, (120, 20))
+		screen.blit(ghost5, (250, 300))
+		draw_text('FINISH', screen, [233, 140], 32, White, Font)
+		draw_text('YOU WON', screen, [208, 240], 32, White, Font)
+		draw_text('BST - Bakibayev Smart Timur', screen, [45, 440], 32, White, Font)
+		pygame.display.update()
+		timer.tick(1)
+
+def lose():
+	while True:
+		screen.fill((Black))
+		for event in pygame.event.get():
+			if event.type == pygame.QUIT:
+				pygame.display.quit()
+				sys.exit()
+		screen.blit(logo1, (120, 20))
+		screen.blit(ghost5, (250, 300))
+		draw_text('FINISH', screen, [233, 140], 32, White, Font)
+		draw_text('YOU LOSE', screen, [208, 240], 32, White, Font)
+		draw_text('KISS MY ASS, SUCKER', screen, [45, 440], 32, White, Font)
+		pygame.display.update()
+		timer.tick(1)
+
 class Enemy():
 	x = 0
 	y = 0
@@ -93,7 +121,7 @@ class Enemy():
 	#	print("chosen new goal", self.goal_x, self.goal_y, "there we have", pm_maze[self.goal_y][self.goal_x])
 
 	def get_coords(self):
-		return self.x*20, self.y*20
+		return self.x, self.y
 
 	def move(self):
 		if self.goal_x is None or self.goal_x == self.x and self.goal_y == self.y:
@@ -102,27 +130,58 @@ class Enemy():
 		if next_x is not None:
 			self.x, self.y = next_x, next_y
 
+class Enemy1():
+	x = 0
+	y = 0
+	goal_x = None
+	goal_y = None
+	
+	def __init__(self):
+		global pm_maze
+		self.x = None
+		self.y = None
+		self.goal_x = None
+		self.goal_y = None
+		while self.x is None or pm_maze[self.y][self.x] != 5:
+			self.x = random.randint(0,len(pm_maze[0])-1)
+			self.y = random.randint(0,len(pm_maze)-1)
+	#	print("chosen start position", self.x, self.y)
 
+	def find_new_goal(self):
+		global pm_maze
+		z,t = get_index(x,y)
 
+		while self.goal_x is None or pm_maze[self.goal_y][self.goal_x] not in [1, 3, 4] or (self.goal_x == self.x and self.goal_y == self.y):
+			self.goal_x = z
+			self.goal_y = t
+	#	print("chosen new goal", self.goal_x, self.goal_y, "there we have", pm_maze[self.goal_y][self.goal_x])
+
+	def get_coords(self):
+		return self.x, self.y
+
+	def move(self):
+		if self.goal_x is None or self.goal_x == self.x and self.goal_y == self.y:
+			self.find_new_goal()
+		next_x, next_y = find(pm_maze,self.x, self.y, self.goal_x, self.goal_y)
+		if next_x is not None:
+			self.x, self.y = next_x, next_y
 enemies1 = []
 enemies2 = []
 enemies3 = []
 enemies4 = []
 
-enemies1.append(Enemy())
+enemies1.append(Enemy1())
 enemies2.append(Enemy())
 enemies3.append(Enemy())
 enemies4.append(Enemy())
-# enemies.append(Enemy())
-
 
 def game():
 #Game loop 
 	global dx, dy, dt, x, y, pm_open_left, pm_open, pm_open_down, pm_open_left, pm_open_up, block, logo, background, ghost, ghost2, look_open_up, look_open_down, look_open_left
 	
-	#pygame.mixer.init()
-	#pygame.mixer.music.load('wap.mp3')
-	#pygame.mixer.music.play(-1, 0.0)
+	pygame.mixer.init()
+	pygame.mixer.music.load('wap.mp3')
+	pygame.mixer.music.play(-1, 0.0)
 	
 	while True:
 
@@ -135,8 +194,6 @@ def game():
 		for enemy in enemies4:
 			enemy.move()
 
-
-
 		save_x, save_y = x, y 
 
 		y = y + dy
@@ -147,29 +204,7 @@ def game():
 				if pm_maze[i][j] == 0 or pm_maze[i][j] == 5:
 					rect2 = pygame.Rect(j*pm_size, i*pm_size, pm_size, pm_size)
 					if rect1.colliderect(rect2):
-						collide = True				
-
-
-		for enemy in enemies1:
-			#print((rect1.x, rect1.y),enemy.get_coords())
-			if enemy.get_coords() == (rect1.x, rect1.y):
-				print('end game')
-
-		for enemy in enemies2:
-			#print((rect1.x, rect1.y),enemy.get_coords())
-			if enemy.get_coords() == (rect1.x, rect1.y):
-				print('end game')
-
-		for enemy in enemies3:
-			#print((rect1.x, rect1.y),enemy.get_coords())
-			if enemy.get_coords() == (rect1.x, rect1.y):
-				print('end game')
-
-		for enemy in enemies4:
-			#print((rect1.x, rect1.y),enemy.get_coords())
-			if enemy.get_coords() == (rect1.x, rect1.y):
-				print('end game')
-
+						collide = True
 
 		if collide:
 			y = save_y
@@ -189,6 +224,52 @@ def game():
 		if collide:
 			x = save_x
 			dx = 0
+
+		for enemy in enemies1:
+			in_x, in_y = get_index(x,y)
+			if enemy.get_coords() == (in_x,in_y) or enemy.get_coords() == (in_x-1,in_y) or enemy.get_coords() == (in_x,in_y-1):
+				print('end game')
+				lives.pop(0)
+				x = 40
+				y = 100
+				dx = 0
+				dy = 0
+
+		for enemy in enemies2:
+			in_x, in_y = get_index(x,y)
+			if enemy.get_coords() == (in_x,in_y) or enemy.get_coords() == (in_x-1,in_y) or enemy.get_coords() == (in_x,in_y-1):
+				print('end game')
+				lives.pop(0)
+				x = 40
+				y = 100
+				dx = 0
+				dy = 0
+
+		for enemy in enemies3:
+			in_x, in_y = get_index(x,y)
+			if enemy.get_coords() == (in_x,in_y) or enemy.get_coords() == (in_x-1,in_y) or enemy.get_coords() == (in_x,in_y-1):
+				print('end game')
+				lives.pop(0)
+				x = 40
+				y = 100
+				dx = 0
+				dy = 0
+
+		for enemy in enemies4:
+			in_x, in_y = get_index(x,y)
+			if enemy.get_coords() == (in_x,in_y) or enemy.get_coords() == (in_x-1,in_y) or enemy.get_coords() == (in_x,in_y-1):
+				print('end game')
+				lives.pop(0)
+				x = 40
+				y = 100
+				dx = 0
+				dy = 0
+
+		if len((lives)) == 0:
+			pygame.mixer.init()
+			pygame.mixer.music.load('ahh.mp3')
+			pygame.mixer.music.play(0, 0.0)
+			lose()
 		
 		########################################Eating coins#########################################			
 		rect1 = pygame.Rect(x,y,pm_size,pm_size)
@@ -257,7 +338,7 @@ def game():
 			elif event.type == pygame.KEYDOWN:
 
 				if event.key == pygame.K_UP:
-					j_pac,i_pac = get_index_map_by_coord(x, y-20)
+					j_pac,i_pac = get_index(x, y-20)
 					if pm_maze[i_pac][j_pac] in [1, 3, 4]:
 						dx = 0
 						dy = -20
@@ -265,7 +346,7 @@ def game():
 						look_open_left = False
 						look_open_down = False
 				elif event.key == pygame.K_DOWN:
-					j_pac,i_pac = get_index_map_by_coord(x, y+20)
+					j_pac,i_pac = get_index(x, y+20)
 					if pm_maze[i_pac][j_pac] in [1, 3, 4]:
 						dx = 0
 						dy = 20
@@ -273,7 +354,7 @@ def game():
 						look_open_left = False
 						look_open_up = False
 				elif event.key == pygame.K_LEFT:
-					j_pac,i_pac = get_index_map_by_coord(x-20, y)
+					j_pac,i_pac = get_index(x-20, y)
 					if pm_maze[i_pac][j_pac] in [1, 3, 4]:
 						dx = -20
 						dy = 0
@@ -281,7 +362,7 @@ def game():
 						look_open_up = False
 						look_open_down = False
 				elif event.key == pygame.K_RIGHT:
-					j_pac, i_pac = get_index_map_by_coord(x+20, y)
+					j_pac, i_pac = get_index(x+20, y)
 					if pm_maze[i_pac][j_pac] in [1, 3, 4]:
 						dx = 20
 						dy = 0
@@ -309,9 +390,6 @@ def game():
 			screen.blit(pm_open_up,(x,y))
 		else:
 			screen.blit(pm_open,(x,y))
-		
-		# screen.blit(ghost1, (z, t))
-		# screen.blit(ghost2, (a, b))
 
 		for enemy in enemies1:
 			screen.blit(ghost1, (enemy.x * pm_size, enemy.y * pm_size))
@@ -321,6 +399,9 @@ def game():
 			screen.blit(ghost3, (enemy.x * pm_size, enemy.y * pm_size))
 		for enemy in enemies4:
 			screen.blit(ghost4, (enemy.x * pm_size, enemy.y * pm_size))
+
+		if summ == 3530:
+			close()
 
 		draw_text('Current Score: {}'.format(summ),screen, [65,0], 16, White, Font)
 		draw_text('High Score:0', screen, [425,0], 16, White, Font)
