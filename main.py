@@ -29,9 +29,9 @@ def get_index(x,y):
 	return index_x, index_y
 
 def menu():
-	pygame.mixer.init()
-	pygame.mixer.music.load('intro.mp3')
-	pygame.mixer.music.play(-1, 0.0)
+	#pygame.mixer.init()
+	#pygame.mixer.music.load('intro.mp3')
+	#pygame.mixer.music.play(-1, 0.0)
 
 	while True:
 		screen.fill((Yellow))
@@ -47,24 +47,37 @@ def menu():
 					second_page()
 		#button = pygame.Rect(50, 100, 200, 50)
 		#pygame.draw.rect(screen, (255, 0, 0), button)
+		#screen.blit(backgr, (0, 0))
 		screen.blit(logo1, (120, 20))
 		#draw_text('PRESS SPACE', screen, [50, 100], 20, White, Font)
-		draw_text('MAIN MENU', screen, [190, 140], 32, White, Font)
-		draw_text('PRESS SHIFT', screen, [180, 240], 32, White, Font)
-		draw_text('PRESS SPACE TO START', screen, [90, 340], 32, White, Font)
+		draw_text('MAIN MENU', screen, [240, 110], 16, Black, Font)
+		draw_text('PRESS SHIFT', screen, [180, 340], 32, White, Font)
+		draw_text('TO KNOW MORE', screen, [230, 380], 16, White, Font)
+		draw_text('PRESS             TO START', screen, [90, 220], 32, Black, Font)
+		draw_text('SPACE', screen, [220, 220], 32, Red, Font)
 		draw_text('PRESS F TO PAY RESPECT', screen, [10, 600], 12, White, Font)
 		pygame.display.update()
 		timer.tick(1)
 
 def second_page():
 	while True:
-		screen.fill((Black))
+		screen.fill((Blue))
 		for event in pygame.event.get():
 			if event.type == pygame.KEYDOWN:
 				if event.key == pygame.K_BACKSPACE:
 					menu()
-		draw_text('MAIN MENU', screen, [190, 140], 32, White, Font)
-		draw_text('PRESS SHIFT', screen, [180, 240], 32, White, Font)
+		screen.blit(bghost1, (40, 220))
+		screen.blit(bghost2, (40, 320))
+		screen.blit(bghost3, (40, 420))
+		screen.blit(bghost4, (40, 520))
+		screen.blit(bpacman, (40, 120))
+
+		draw_text('CHARACTERS', screen, [180, 40], 32, White, Font)
+		draw_text('PACMAN', screen, [120, 130], 24, White, Font)
+		draw_text('GOHA', screen, [120, 230], 24, White, Font)
+		draw_text('PINKY', screen, [120, 330], 24, White, Font)
+		draw_text('TINKY', screen, [120, 430], 24, White, Font)
+		draw_text('WINKY', screen, [120, 530], 24, White, Font)
 		pygame.display.update()
 
 def close():
@@ -74,16 +87,23 @@ def close():
 			if event.type == pygame.QUIT:
 				pygame.display.quit()
 				sys.exit()
+		screen.blit(f1, (20, 100))
+		screen.blit(f1, (200, 400))
+		screen.blit(f1, (300, 200))
 		screen.blit(logo1, (120, 20))
-		screen.blit(ghost5, (250, 300))
+		screen.blit(ghost5, (250, 350))
+		screen.blit(hat, (260, 280))
+
 		draw_text('FINISH', screen, [233, 140], 32, White, Font)
-		draw_text('YOU WON', screen, [208, 240], 32, White, Font)
-		draw_text('BST - Bakibayev Smart Timur', screen, [45, 440], 32, White, Font)
+		draw_text('YOU WON', screen, [208, 240], 32, White, Font) 
 		pygame.display.update()
 		timer.tick(1)
 
 def lose():
 	while True:
+		lives.append(1)
+		lives.append(1)
+		lives.append(1)
 		screen.fill((Black))
 		for event in pygame.event.get():
 			if event.type == pygame.QUIT:
@@ -93,8 +113,8 @@ def lose():
 		screen.blit(ghost5, (250, 300))
 		draw_text('FINISH', screen, [233, 140], 32, White, Font)
 		draw_text('YOU LOSE', screen, [208, 240], 32, White, Font)
-		draw_text('KISS MY ASS, SUCKER', screen, [45, 440], 32, White, Font)
-		pygame.display.update()
+		draw_text('LAME LOOSER', screen, [200, 440], 32, White, Font)
+		pygame.display.update()			
 		timer.tick(1)
 
 class Enemy():
@@ -227,7 +247,7 @@ def game():
 
 		for enemy in enemies1:
 			in_x, in_y = get_index(x,y)
-			if enemy.get_coords() == (in_x,in_y) or enemy.get_coords() == (in_x-1,in_y) or enemy.get_coords() == (in_x,in_y-1):
+			if enemy.get_coords() == (in_x,in_y) or enemy.get_coords() == (in_x-1, in_y) or enemy.get_coords() == (in_x, in_y-1):
 				print('end game')
 				lives.pop(0)
 				x = 40
@@ -237,7 +257,7 @@ def game():
 
 		for enemy in enemies2:
 			in_x, in_y = get_index(x,y)
-			if enemy.get_coords() == (in_x,in_y) or enemy.get_coords() == (in_x-1,in_y) or enemy.get_coords() == (in_x,in_y-1):
+			if enemy.get_coords() == (in_x,in_y) or enemy.get_coords() == (in_x-1, in_y) or enemy.get_coords() == (in_x, in_y-1):
 				print('end game')
 				lives.pop(0)
 				x = 40
@@ -247,7 +267,7 @@ def game():
 
 		for enemy in enemies3:
 			in_x, in_y = get_index(x,y)
-			if enemy.get_coords() == (in_x,in_y) or enemy.get_coords() == (in_x-1,in_y) or enemy.get_coords() == (in_x,in_y-1):
+			if enemy.get_coords() == (in_x,in_y) or enemy.get_coords() == (in_x-1, in_y) or enemy.get_coords() == (in_x, in_y-1):
 				print('end game')
 				lives.pop(0)
 				x = 40
@@ -257,7 +277,7 @@ def game():
 
 		for enemy in enemies4:
 			in_x, in_y = get_index(x,y)
-			if enemy.get_coords() == (in_x,in_y) or enemy.get_coords() == (in_x-1,in_y) or enemy.get_coords() == (in_x,in_y-1):
+			if enemy.get_coords() == (in_x,in_y) or enemy.get_coords() == (in_x-1, in_y) or enemy.get_coords() == (in_x, in_y-1):
 				print('end game')
 				lives.pop(0)
 				x = 40
@@ -268,7 +288,7 @@ def game():
 		if len((lives)) == 0:
 			pygame.mixer.init()
 			pygame.mixer.music.load('ahh.mp3')
-			pygame.mixer.music.play(0, 0.0)
+			pygame.mixer.music.play(3, 0.0)
 			lose()
 		
 		########################################Eating coins#########################################			
