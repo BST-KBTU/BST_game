@@ -45,6 +45,9 @@ def menu():
 			if event.type == pygame.KEYDOWN:
 				if event.key == pygame.K_LSHIFT:
 					second_page()
+			if event.type == pygame.KEYDOWN:
+				if event.key == pygame.K_f:
+					F()
 		#button = pygame.Rect(50, 100, 200, 50)
 		#pygame.draw.rect(screen, (255, 0, 0), button)
 		#screen.blit(backgr, (0, 0))
@@ -80,6 +83,15 @@ def second_page():
 		draw_text('WINKY', screen, [120, 530], 24, White, Font)
 		pygame.display.update()
 
+def F():
+	while True:
+		screen.blit(cute, (0, 0))
+		for event in pygame.event.get():
+			if event.type == pygame.KEYDOWN:
+				if event.key == pygame.K_BACKSPACE:
+					menu()
+		pygame.display.update()
+
 def close():
 	while True:
 		screen.fill((Black))
@@ -101,9 +113,6 @@ def close():
 
 def lose():
 	while True:
-		lives.append(1)
-		lives.append(1)
-		lives.append(1)
 		screen.fill((Black))
 		for event in pygame.event.get():
 			if event.type == pygame.QUIT:
@@ -423,11 +432,19 @@ def game():
 		if summ == 3530:
 			close()
 
-		draw_text('Current Score: {}'.format(summ),screen, [65,0], 16, White, Font)
-		draw_text('High Score:0', screen, [425,0], 16, White, Font)
+		draw_text('Current Score: {}'.format(summ),screen, [220,0], 16, White, Font)
+		screen.blit(pm_open, (10 ,645))
+		screen.blit(pm_open, (30 ,645))
+		screen.blit(pm_open, (50 ,645))
+		if len((lives)) == 2:
+			pygame.draw.circle(screen, Black, (60, 655), 10)
+		if len((lives)) == 1:
+			pygame.draw.circle(screen, Black, (60, 655), 10)
+			pygame.draw.circle(screen, Black, (40, 655), 10)
+
+
 
 		pygame.display.flip()
 		timer.tick(FPS)
 	pygame.display.update()
-
 menu()
