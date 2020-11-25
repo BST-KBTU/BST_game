@@ -2,9 +2,9 @@ import pygame, sys
 import numpy as np
 import random
 from dijkstra import find
-from char import  *  # * - same folder
+from char import  *
 from maze_pacman import  *
-
+vec = pygame.math.Vector2
 pygame.init()
 
 screen = pygame.display.set_mode((Width,Height))
@@ -23,7 +23,7 @@ def draw_text(words, screen, pos, size, color, font_name, centered=False):
 	text = font.render(words, False, color)
 	screen.blit(text,pos)
 
-def get_index(x,y): #получаем индексы пакмана
+def get_index(x,y):
 	index_x = x//20
 	index_y = y//20
 	return index_x, index_y
@@ -32,28 +32,24 @@ def menu():
 	pygame.mixer.init()
 	pygame.mixer.music.load('intro.mp3')
 	pygame.mixer.music.play(-1, 0.0)
+
 	while True:
 		screen.fill((Yellow))
 		for event in pygame.event.get():
 			if event.type == pygame.QUIT:
 				pygame.display.quit()
 				sys.exit()
-			if event.type == pygame.KEYDOWN:
+			elif event.type == pygame.KEYDOWN:
 				if event.key == pygame.K_SPACE:
-					pygame.mixer.music.stop()
 					game()
-
-			if event.type == pygame.KEYDOWN:
+			elif event.type == pygame.KEYDOWN:
 				if event.key == pygame.K_LSHIFT:
 					second_page()
-			if event.type == pygame.KEYDOWN:
+			elif event.type == pygame.KEYDOWN:
 				if event.key == pygame.K_f:
 					F()
-		#button = pygame.Rect(50, 100, 200, 50)
-		#pygame.draw.rect(screen, (255, 0, 0), button)
-		#screen.blit(backgr, (0, 0))
+
 		screen.blit(logo1, (120, 20))
-		#draw_text('PRESS SPACE', screen, [50, 100], 20, White, Font)
 		draw_text('MAIN MENU', screen, [240, 110], 16, Black, Font)
 		draw_text('PRESS SHIFT', screen, [180, 340], 32, White, Font)
 		draw_text('TO KNOW MORE', screen, [230, 380], 16, White, Font)
@@ -62,7 +58,6 @@ def menu():
 		draw_text('PRESS F TO PAY RESPECT', screen, [10, 600], 12, White, Font)
 		pygame.display.update()
 		timer.tick(1)
-
 
 def second_page():
 	while True:
@@ -119,47 +114,49 @@ def lose():
 		for event in pygame.event.get():
 			if event.type == pygame.QUIT:
 				pygame.display.quit()
-				sys.exit()
+			if event.type == pygame.KEYDOWN:
+				if event.key == pygame.K_BACKSPACE:
+					menu()
+		
 		screen.blit(logo1, (120, 20))
 		screen.blit(ghost5, (250, 300))
 		draw_text('FINISH', screen, [233, 140], 32, White, Font)
 		draw_text('YOU LOSE', screen, [208, 240], 32, White, Font)
-		draw_text('LAME LOOSER', screen, [200, 440], 32, White, Font)
-		pygame.display.update()			
-		timer.tick(1)
-
-class Enemy(): #
-	x = 0 #координаты
+		draw_text('LAME LOOSER', screen, [180, 440], 32, White, Font)
+		pygame.display.update()			 
+		timer.tick(1) 
+        
+class Enemy():
+	x = 0
 	y = 0
-	goal_x = None #pustoe mnojestvo
+	goal_x = None
 	goal_y = None
-	def __init__(self): #oboznachit peremeniye v klasse
+	def __init__(self):
 		global pm_maze
-		self.x = None #peremeniye pacmana
+		self.x = None
 		self.y = None
 		self.goal_x = None
 		self.goal_y = None
-		while self.x is None or pm_maze[self.y][self.x] != 5: #5 gde gostiki
-			self.x = random.randint(0,len(pm_maze[0])-1) #x i y randomniye chisla ot 0 do koordinat pacmana
+		while self.x is None or pm_maze[self.y][self.x] != 5:
+			self.x = random.randint(0,len(pm_maze[0])-1)
 			self.y = random.randint(0,len(pm_maze)-1)
-	#	print("chosen start position", self.x, self.y)
 
-	def find_new_goal(self): #nahodit noviye znacheniya
-		global pm_maze #esli koordinata ghost ne v 134 to nahodit novui celi
+	def find_new_goal(self):
+		global pm_maze
 		while self.goal_x is None or pm_maze[self.goal_y][self.goal_x] not in [1, 3, 4] or (self.goal_x == self.x and self.goal_y == self.y):
 			self.goal_x = random.randint(0,len(pm_maze[0])-1)
 			self.goal_y = random.randint(0,len(pm_maze)-1)
-	#	print("chosen new goal", self.goal_x, self.goal_y, "there we have", pm_maze[self.goal_y][self.goal_x])
 
-	def get_coords(self): #poluchali znacheniye koordinati ghostika
+	def get_coords(self):
 		return self.x, self.y
 
-	def move(self): #kogda dohodit do celi menyat na novui
+	def move(self):
 		if self.goal_x is None or self.goal_x == self.x and self.goal_y == self.y:
 			self.find_new_goal()
-		next_x, next_y = find(pm_maze,self.x, self.y, self.goal_x, self.goal_y) #i oboznachayem 
+		next_x, next_y = find(pm_maze,self.x, self.y, self.goal_x, self.goal_y)
 		if next_x is not None:
 			self.x, self.y = next_x, next_y
+
 
 class Enemy1():
 	x = 0
@@ -176,27 +173,27 @@ class Enemy1():
 		while self.x is None or pm_maze[self.y][self.x] != 5:
 			self.x = random.randint(0,len(pm_maze[0])-1)
 			self.y = random.randint(0,len(pm_maze)-1)
-	#	print("chosen start position", self.x, self.y)
 
-	def find_new_goal(self): #goha vmesto randoma pacman
+	def find_new_goal(self, dest_x, dest_y):
 		global pm_maze
-		z,t = get_index(x,y)
+		z,t = get_index(dest_x, dest_y)
 
 		while self.goal_x is None or pm_maze[self.goal_y][self.goal_x] not in [1, 3, 4] or (self.goal_x == self.x and self.goal_y == self.y):
 			self.goal_x = z
 			self.goal_y = t
-	#	print("chosen new goal", self.goal_x, self.goal_y, "there we have", pm_maze[self.goal_y][self.goal_x])
 
 	def get_coords(self):
 		return self.x, self.y
 
-	def move(self):
+	def move(self, dest_x, dest_y):
 		if self.goal_x is None or self.goal_x == self.x and self.goal_y == self.y:
-			self.find_new_goal()
-		next_x, next_y = find(pm_maze,self.x, self.y, self.goal_x, self.goal_y)
+			self.find_new_goal(dest_x, dest_y)
+		tmp_x, tmp_y = get_index(dest_x, dest_y)
+		next_x, next_y = find(pm_maze,self.x, self.y, tmp_x, tmp_y)
 		if next_x is not None:
 			self.x, self.y = next_x, next_y
-enemies1 = [] #v massive koordinaty
+
+enemies1 = []
 enemies2 = []
 enemies3 = []
 enemies4 = []
@@ -205,21 +202,20 @@ enemies1.append(Enemy1())
 enemies2.append(Enemy())
 enemies3.append(Enemy())
 enemies4.append(Enemy())
-snd1 = pygame.mixer.Sound('wap1.wav')
-snd2 = pygame.mixer.Sound('ahh1.wav')
+
+snd1 = pygame.mixer.Sound("wap1.wav")
+snd2 = pygame.mixer.Sound("ahh1.wav")
 
 def game():
 #Game loop 
 	global dx, dy, dt, x, y, pm_open_left, pm_open, pm_open_down, pm_open_left, pm_open_up, block, logo, background, ghost, ghost2, look_open_up, look_open_down, look_open_left
-	snd1.play(-1)
-	#pygame.mixer.init()
-	#pygame.mixer.music.load('wap.mp3')
-	#pygame.mixer.music.play(-1, 0.0)
 	
+	snd1.play(-1)
+
 	while True:
 
 		for enemy in enemies1:
-			enemy.move()
+			enemy.move(x, y)
 		for enemy in enemies2:
 			enemy.move()
 		for enemy in enemies3:
@@ -230,12 +226,12 @@ def game():
 		save_x, save_y = x, y 
 
 		y = y + dy
-		rect1 = pygame.Rect(x, y, pm_size, pm_size) #pacman
+		rect1 = pygame.Rect(x, y, pm_size, pm_size)
 		collide = False
-		for i in range(len(pm_maze)): #boundaries 
+		for i in range(len(pm_maze)):
 			for j in range(len(pm_maze[i])):
 				if pm_maze[i][j] == 0 or pm_maze[i][j] == 5:
-					rect2 = pygame.Rect(j*pm_size, i*pm_size, pm_size, pm_size) 
+					rect2 = pygame.Rect(j*pm_size, i*pm_size, pm_size, pm_size)
 					if rect1.colliderect(rect2):
 						collide = True
 
@@ -305,7 +301,7 @@ def game():
 		if len((lives)) == 0:
 			snd1.stop()
 			pygame.mixer.init()
-			pygame.mixer.music.load('hehehe.mp3')
+			pygame.mixer.music.load('ahh.mp3')
 			pygame.mixer.music.play(1, 0.0)
 			lose()
 		
@@ -337,9 +333,6 @@ def game():
 		summ = -10
 		for i in coin:
 			summ += i
-
-		#scores.append(summ)
-		#scores_max = np.max(scores)
 		
 		#####################################Teleportation###################################
 		transport = False
@@ -450,8 +443,6 @@ def game():
 		if len((lives)) == 1:
 			pygame.draw.circle(screen, Black, (60, 655), 10)
 			pygame.draw.circle(screen, Black, (40, 655), 10)
-
-
 
 		pygame.display.flip()
 		timer.tick(FPS)
