@@ -44,14 +44,14 @@ def menu():
 			if event.type == pygame.QUIT:
 				pygame.display.quit()
 				sys.exit()
-			elif event.type == pygame.KEYDOWN:
+			if event.type == pygame.KEYDOWN:
 				if event.key == pygame.K_SPACE:
 					pygame.mixer.music.stop()
 					game()
-			elif event.type == pygame.KEYDOWN:
+			if event.type == pygame.KEYDOWN:
 				if event.key == pygame.K_LSHIFT:
 					second_page()
-			elif event.type == pygame.KEYDOWN:
+			if event.type == pygame.KEYDOWN:
 				if event.key == pygame.K_f:
 					F()
 
@@ -341,7 +341,7 @@ def game():
 		for i in coin:
 			summ += i
 
-		
+
 		
 		#####################################Teleportation###################################
 		transport = False
