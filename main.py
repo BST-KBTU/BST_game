@@ -4,7 +4,7 @@ import random
 from dijkstra import find
 from char import  *
 from maze_pacman import  *
-vec = pygame.math.Vector2
+from database import get_best, cur, insert_result
 pygame.init()
 
 screen = pygame.display.set_mode((Width,Height))
@@ -15,8 +15,13 @@ pygame.display.set_icon(logo)
 timer = pygame.time.Clock()
 
 coin = []
-scores = []
 lives = [1 ,1 ,1]
+
+High_score = get_best()
+
+for score in enumerate(High_score):
+		h_score= score[1]
+		s = f"{h_score}"
 
 def draw_text(words, screen, pos, size, color, font_name, centered=False):
 	font = pygame.font.SysFont(font_name, size)
@@ -41,6 +46,7 @@ def menu():
 				sys.exit()
 			elif event.type == pygame.KEYDOWN:
 				if event.key == pygame.K_SPACE:
+					pygame.mixer.music.stop()
 					game()
 			elif event.type == pygame.KEYDOWN:
 				if event.key == pygame.K_LSHIFT:
@@ -114,6 +120,7 @@ def lose():
 		for event in pygame.event.get():
 			if event.type == pygame.QUIT:
 				pygame.display.quit()
+				sys.exit()
 			if event.type == pygame.KEYDOWN:
 				if event.key == pygame.K_BACKSPACE:
 					menu()
@@ -333,6 +340,8 @@ def game():
 		summ = -10
 		for i in coin:
 			summ += i
+
+		
 		
 		#####################################Teleportation###################################
 		transport = False
@@ -434,7 +443,9 @@ def game():
 		if summ == 3530:
 			close()
 
-		draw_text('Current Score: {}'.format(summ),screen, [220,0], 16, White, Font)
+		draw_text('Current Score: {}'.format(summ),screen, [120,0], 16, White, Font)
+		draw_text('High Score:',screen, [320,0], 16, White, Font)
+		draw_text(s[1:5],screen,[440,0],16,White,Font)
 		screen.blit(pm_open, (10 ,645))
 		screen.blit(pm_open, (30 ,645))
 		screen.blit(pm_open, (50 ,645))
@@ -446,5 +457,7 @@ def game():
 
 		pygame.display.flip()
 		timer.tick(FPS)
+		insert_result(summ)
 	pygame.display.update()
+
 menu()
