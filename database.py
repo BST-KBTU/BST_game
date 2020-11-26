@@ -4,14 +4,14 @@ bd = sqlite3.connect("Pacman.sqlite")
 
 cur = bd.cursor()
 cur.execute("""
-create table if not exists RECORDS(
-	score integer
+CREATE TABLE IF NOT EXISTS RECORDS(
+	score INTEGER
 )""")
 
 def insert_result(score):
 	cur.execute("""
-		insert into RECORDS values (?)
-	""", (score),)
+		INSERT INTO RECORDS VALUES (?)
+	""", (score,))
 	bd.commit()
 
 def get_best():
@@ -21,6 +21,3 @@ def get_best():
 	LIMIT 1
 	""")
 	return cur.fetchall()
-
-print(get_best())
-
