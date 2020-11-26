@@ -14,136 +14,62 @@ pygame.display.set_caption("PacMan")
 pygame.display.set_icon(logo)
 timer = pygame.time.Clock()
 
-coin = []
-lives = [1 ,1 ,1]
+coin = None
+lives = None
+
+def init_cond1():
+	global pm_maze  
+	pm_maze = [
+	  [2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2],
+	  [2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+	  [2,0,4,1,1,1,1,1,1,1,1,1,1,1,0,0,1,1,1,1,1,1,1,1,1,1,1,4,0],
+	  [2,0,1,0,0,0,0,1,0,0,0,0,0,1,0,0,1,0,0,0,0,0,1,0,0,0,0,1,0],
+	  [2,0,1,0,2,2,0,1,0,2,2,2,0,1,0,0,1,0,2,2,2,0,1,0,2,2,0,1,0],
+	  [2,0,1,0,0,0,0,1,0,0,0,0,0,1,0,0,1,0,0,0,0,0,1,0,0,0,0,1,0],
+	  [2,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0],
+	  [2,0,1,0,0,0,0,1,0,0,1,0,0,0,0,0,0,0,0,1,0,0,1,0,0,0,0,1,0],
+	  [2,0,1,0,0,0,0,1,0,0,1,0,0,0,0,0,0,0,0,1,0,0,1,0,0,0,0,1,0],
+	  [2,0,1,1,1,1,1,1,0,0,1,1,1,1,0,0,1,1,1,1,0,0,1,1,1,1,1,1,0],
+	  [2,0,0,0,0,0,0,1,0,0,0,0,0,1,0,0,1,0,0,0,0,0,1,0,0,0,0,0,0],
+	  [2,2,2,2,2,2,0,1,0,0,0,0,0,1,0,0,1,0,0,0,0,0,1,0,2,2,2,2,2],
+	  [2,2,2,2,2,2,0,1,0,0,1,1,1,1,1,1,1,1,1,1,0,0,1,0,2,2,2,2,2],
+	  [2,2,2,2,2,2,0,1,0,0,1,0,0,0,5,5,0,0,0,1,0,0,1,0,2,2,2,2,2],
+	  [0,0,0,0,0,0,0,1,0,0,1,0,3,5,5,5,5,3,0,1,0,0,1,0,0,0,0,0,0,0],
+	  [6,1,1,1,1,1,1,4,1,1,1,0,5,5,5,5,5,5,0,1,1,1,4,1,1,1,1,1,1,3,7], #middle
+	  [0,0,0,0,0,0,0,1,0,0,1,0,3,5,5,5,5,3,0,1,0,0,1,0,0,0,0,0,0,0],
+	  [2,2,2,2,2,2,0,1,0,0,1,0,0,0,0,0,0,0,0,1,0,0,1,0,2,2,2,2,2],
+	  [2,2,2,2,2,2,0,1,0,0,1,1,1,1,1,1,1,1,1,1,0,0,1,0,2,2,2,2,2],
+	  [2,2,2,2,2,2,0,1,0,0,1,0,0,0,0,0,0,0,0,1,0,0,1,0,2,2,2,2,2],
+	  [2,0,0,0,0,0,0,1,0,0,1,0,0,0,0,0,0,0,0,1,0,0,1,0,0,0,0,0,0],
+	  [2,0,1,1,1,1,1,1,1,1,1,1,1,1,0,0,1,1,1,1,1,1,1,1,1,1,1,1,0],
+	  [2,0,1,0,0,0,0,1,0,0,0,0,0,1,0,0,1,0,0,0,0,0,1,0,0,0,0,1,0],
+	  [2,0,1,0,0,0,0,1,0,0,0,0,0,1,0,0,1,0,0,0,0,0,1,0,0,0,0,1,0],
+	  [2,0,1,1,1,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,1,1,1,0],
+	  [2,0,0,0,1,0,0,1,0,0,1,0,0,0,0,0,0,0,0,1,0,0,1,0,0,1,0,0,0],
+	  [2,0,0,0,1,0,0,1,0,0,1,0,0,0,0,0,0,0,0,1,0,0,1,0,0,1,0,0,0],
+	  [2,0,1,1,1,1,1,1,0,0,1,1,1,1,0,0,1,1,1,1,0,0,1,1,1,1,1,1,0],
+	  [2,0,1,0,0,0,0,0,0,0,0,0,0,1,0,0,1,0,0,0,0,0,0,0,0,0,0,1,0],
+	  [2,0,1,0,0,0,0,0,0,0,0,0,0,1,0,0,1,0,0,0,0,0,0,0,0,0,0,1,0],
+	  [2,0,4,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,4,0],
+	  [2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+	]
+
+init_cond1()
 
 High_score = get_best()
+
+snd3 = pygame.mixer.Sound("ohayo.wav")
 
 for score in enumerate(High_score):
 		h_score = score[1]
 		s = f"{h_score}"
 
-def draw_text(words, screen, pos, size, color, font_name, centered=False):
-	font = pygame.font.SysFont(font_name, size)
-	text = font.render(words, False, color)
-	screen.blit(text,pos)
 
-def get_index(x,y):
-	index_x = x//20
-	index_y = y//20
-	return index_x, index_y
+enemies1 = None
+enemies2 = None
+enemies3 = None
+enemies4 = None
 
-def menu():
-	pygame.mixer.init()
-	pygame.mixer.music.load('intro.mp3')
-	pygame.mixer.music.play(-1, 0.0)
-
-	while True:
-		screen.fill((Yellow))
-		for event in pygame.event.get():
-			if event.type == pygame.QUIT:
-				pygame.display.quit()
-				sys.exit()
-			if event.type == pygame.KEYDOWN:
-				if event.key == pygame.K_SPACE:
-					pygame.mixer.music.stop()
-					game()
-			if event.type == pygame.KEYDOWN:
-				if event.key == pygame.K_LSHIFT:
-					second_page()
-			if event.type == pygame.KEYDOWN:
-				if event.key == pygame.K_f:
-					F()
-
-		screen.blit(logo1, (120, 20))
-		draw_text('MAIN MENU', screen, [240, 110], 16, Black, Font)
-		draw_text('PRESS SHIFT', screen, [180, 340], 32, White, Font)
-		draw_text('TO KNOW MORE', screen, [230, 380], 16, White, Font)
-		draw_text('PRESS             TO START', screen, [90, 220], 32, Black, Font)
-		draw_text('SPACE', screen, [220, 220], 32, Red, Font)
-		draw_text('PRESS F TO PAY RESPECT', screen, [10, 600], 12, White, Font)
-		pygame.display.update()
-		timer.tick(1)
-
-def second_page():
-	while True:
-		screen.fill((Blue))
-		for event in pygame.event.get():
-			if event.type == pygame.KEYDOWN:
-				if event.key == pygame.K_BACKSPACE:
-					menu()
-		screen.blit(bghost1, (40, 220))
-		screen.blit(bghost2, (40, 320))
-		screen.blit(bghost3, (40, 420))
-		screen.blit(bghost4, (40, 520))
-		screen.blit(bpacman, (40, 120))
-
-		draw_text('CHARACTERS', screen, [20, 50], 32, White, Font)
-		draw_text('SETTINGS', screen, [320, 50], 32, White, Font)
-		draw_text('PACMAN', screen, [120, 130], 24, White, Font)
-		draw_text('GOHA', screen, [120, 230], 24, White, Font)
-		draw_text('PINKY', screen, [120, 330], 24, White, Font)
-		draw_text('TINKY', screen, [120, 430], 24, White, Font)
-		draw_text('WINKY', screen, [120, 530], 24, White, Font)
-		draw_text('Press K_UP to go up', screen, [300, 130], 18, White, Font)
-		draw_text('Press K_DOWN to go down', screen, [300, 180], 18, White, Font)
-		draw_text('Press K_RIGHT to go right', screen, [300, 230], 18, White, Font)
-		draw_text('Press K_LEFT to go left', screen, [300, 280], 18, White, Font)
-		draw_text('Press BACKSPACE to go to the MENU', screen, [10, 10], 18, White, Font)
-		draw_text('Yellow coin = 10 points', screen, [300, 340], 16, White, Font)
-		draw_text('Yellow', screen, [300, 340], 16, Yellow, Font)
-		draw_text('Pink coin = 100 points', screen, [300, 370], 16, White, Font)
-		draw_text('Pink', screen, [300, 370], 16, Pink, Font)
-		draw_text('Max amount of points is 3530', screen, [300, 400], 16, White, Font)
-		pygame.display.update()
-
-def F():
-	while True:
-		screen.blit(cute, (0, 0))
-		for event in pygame.event.get():
-			if event.type == pygame.KEYDOWN:
-				if event.key == pygame.K_BACKSPACE:
-					menu()
-		pygame.display.update()
-
-def close():
-	while True:
-		screen.fill((Black))
-		for event in pygame.event.get():
-			if event.type == pygame.QUIT:
-				pygame.display.quit()
-				sys.exit()
-		screen.blit(f1, (20, 100))
-		screen.blit(f1, (200, 400))
-		screen.blit(f1, (300, 200))
-		screen.blit(logo1, (120, 20))
-		screen.blit(ghost5, (250, 350))
-		screen.blit(hat, (260, 280))
-
-		draw_text('FINISH', screen, [233, 140], 32, White, Font)
-		draw_text('YOU WON', screen, [208, 240], 32, White, Font) 
-		pygame.display.update()
-		timer.tick(1)
-
-def lose():
-	while True:
-		screen.fill((Black))
-		for event in pygame.event.get():
-			if event.type == pygame.QUIT:
-				pygame.display.quit()
-				sys.exit()
-			if event.type == pygame.KEYDOWN:
-				if event.key == pygame.K_BACKSPACE:
-					menu()
-		
-		screen.blit(logo1, (120, 20))
-		screen.blit(ghost5, (250, 300))
-		draw_text('FINISH', screen, [233, 140], 32, White, Font)
-		draw_text('YOU LOSE', screen, [208, 240], 32, White, Font)
-		draw_text('LAME LOOSER', screen, [180, 440], 32, White, Font)
-		pygame.display.update()			 
-		timer.tick(1) 
-        
 class Enemy():
 	x = 0
 	y = 0
@@ -211,15 +137,149 @@ class Enemy1():
 		if next_x is not None:
 			self.x, self.y = next_x, next_y
 
-enemies1 = []
-enemies2 = []
-enemies3 = []
-enemies4 = []
 
-enemies1.append(Enemy1())
-enemies2.append(Enemy())
-enemies3.append(Enemy())
-enemies4.append(Enemy())
+def init_cond():
+	global enemies1, enemies2, enemies3,enemies4, lives, coin
+	enemies1 = []
+	enemies2 = []
+	enemies3 = []
+	enemies4 = []
+	enemies1.append(Enemy1())
+	enemies2.append(Enemy())
+	enemies3.append(Enemy())
+	enemies4.append(Enemy())
+	lives = [1, 1, 1]
+	coin = []
+	
+init_cond()
+
+def draw_text(words, screen, pos, size, color, font_name, centered=False):
+	font = pygame.font.SysFont(font_name, size)
+	text = font.render(words, False, color)
+	screen.blit(text,pos)
+
+def get_index(x,y):
+	index_x = x//20
+	index_y = y//20
+	return index_x, index_y
+
+def menu():
+	snd3.stop()
+	pygame.mixer.init()
+	pygame.mixer.music.load('intro.mp3')
+	pygame.mixer.music.play(-1, 0.0)
+
+	while True:
+		screen.fill((Yellow))
+		for event in pygame.event.get():
+			if event.type == pygame.QUIT:
+				pygame.display.quit()
+				sys.exit()
+			if event.type == pygame.KEYDOWN:
+				if event.key == pygame.K_SPACE:
+					pygame.mixer.music.stop()
+					init_cond()
+					init_cond1()
+					game()
+			if event.type == pygame.KEYDOWN:
+				if event.key == pygame.K_LSHIFT:
+					second_page()
+			if event.type == pygame.KEYDOWN:
+				if event.key == pygame.K_f:
+					pygame.mixer.music.stop()
+					F()
+
+		screen.blit(logo1, (120, 20))
+		draw_text('MAIN MENU', screen, [240, 110], 16, Black, Font)
+		draw_text('PRESS SHIFT', screen, [180, 340], 32, White, Font)
+		draw_text('TO KNOW MORE', screen, [230, 380], 16, White, Font)
+		draw_text('PRESS             TO START', screen, [90, 220], 32, Black, Font)
+		draw_text('SPACE', screen, [220, 220], 32, Red, Font)
+		draw_text('PRESS F TO PAY RESPECT', screen, [10, 600], 12, White, Font)
+		pygame.display.update()
+		timer.tick(1)
+
+def second_page():
+	while True:
+		screen.fill((Blue))
+		for event in pygame.event.get():
+			if event.type == pygame.KEYDOWN:
+				if event.key == pygame.K_BACKSPACE:
+					menu()
+		screen.blit(bghost1, (40, 220))
+		screen.blit(bghost2, (40, 320))
+		screen.blit(bghost3, (40, 420))
+		screen.blit(bghost4, (40, 520))
+		screen.blit(bpacman, (40, 120))
+
+		draw_text('CHARACTERS', screen, [20, 50], 32, White, Font)
+		draw_text('SETTINGS', screen, [320, 50], 32, White, Font)
+		draw_text('PACMAN', screen, [120, 130], 24, White, Font)
+		draw_text('GOHA', screen, [120, 230], 24, White, Font)
+		draw_text('PINKY', screen, [120, 330], 24, White, Font)
+		draw_text('TINKY', screen, [120, 430], 24, White, Font)
+		draw_text('WINKY', screen, [120, 530], 24, White, Font)
+		draw_text('Press K_UP to go up', screen, [300, 130], 18, White, Font)
+		draw_text('Press K_DOWN to go down', screen, [300, 180], 18, White, Font)
+		draw_text('Press K_RIGHT to go right', screen, [300, 230], 18, White, Font)
+		draw_text('Press K_LEFT to go left', screen, [300, 280], 18, White, Font)
+		draw_text('Press BACKSPACE to go to the MENU', screen, [10, 10], 18, White, Font)
+		draw_text('Yellow coin = 10 points', screen, [300, 340], 16, White, Font)
+		draw_text('Yellow', screen, [300, 340], 16, Yellow, Font)
+		draw_text('Pink coin = 100 points', screen, [300, 370], 16, White, Font)
+		draw_text('Pink', screen, [300, 370], 16, Pink, Font)
+		draw_text('Max amount of points is 3530', screen, [300, 400], 16, White, Font)
+		pygame.display.update()
+
+def F():
+	snd3.play()
+	while True:
+		screen.blit(cute, (0, 0))
+		for event in pygame.event.get():
+			if event.type == pygame.KEYDOWN:
+				if event.key == pygame.K_BACKSPACE:
+					menu()
+		pygame.display.update()
+
+def close():
+	while True:
+		screen.fill((Black))
+		for event in pygame.event.get():
+			if event.type == pygame.QUIT:
+				pygame.display.quit()
+				sys.exit()
+		screen.blit(f1, (20, 100))
+		screen.blit(f1, (200, 400))
+		screen.blit(f1, (300, 200))
+		screen.blit(logo1, (120, 20))
+		screen.blit(ghost5, (250, 350))
+		screen.blit(hat, (260, 280))
+
+		draw_text('FINISH', screen, [233, 140], 32, White, Font)
+		draw_text('YOU WON', screen, [208, 240], 32, White, Font) 
+		pygame.display.update()
+		timer.tick(1)
+
+def lose():
+	while True:
+		screen.fill((Black))
+		for event in pygame.event.get():
+			if event.type == pygame.QUIT:
+				pygame.display.quit()
+				sys.exit()
+			if event.type == pygame.KEYDOWN:
+				if event.key == pygame.K_BACKSPACE:
+					menu()
+		
+		screen.blit(logo1, (120, 20))
+		screen.blit(ghost5, (250, 300))
+		draw_text('FINISH', screen, [233, 140], 32, White, Font)
+		draw_text('YOU LOSE', screen, [208, 240], 32, White, Font)
+		draw_text('LAME LOOSER', screen, [180, 440], 32, White, Font)
+		draw_text('Press BACKSPACE to go back to MENU', screen, [54, 540], 24, White, Font)
+		pygame.display.update()			 
+		timer.tick(1) 
+        
 
 snd1 = pygame.mixer.Sound("wap1.wav")
 snd2 = pygame.mixer.Sound("ahh1.wav")
