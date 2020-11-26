@@ -20,7 +20,7 @@ lives = [1 ,1 ,1]
 High_score = get_best()
 
 for score in enumerate(High_score):
-		h_score= score[1]
+		h_score = score[1]
 		s = f"{h_score}"
 
 def draw_text(words, screen, pos, size, color, font_name, centered=False):
@@ -34,9 +34,9 @@ def get_index(x,y):
 	return index_x, index_y
 
 def menu():
-	#pygame.mixer.init()
-	#pygame.mixer.music.load('intro.mp3')
-	#pygame.mixer.music.play(-1, 0.0)
+	pygame.mixer.init()
+	pygame.mixer.music.load('intro.mp3')
+	pygame.mixer.music.play(-1, 0.0)
 
 	while True:
 		screen.fill((Yellow))
