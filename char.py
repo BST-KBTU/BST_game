@@ -28,8 +28,8 @@ pm_open_up = pygame.image.load("pacman_open_up.png")
 block = pygame.image.load("Purple_Block.png")
 logo = pygame.image.load("pmlogo.jpg")
 logo1 = pygame.image.load("logo1.png")
-backgr = pygame.image.load("Prob_maze.png")
 f1 = pygame.image.load("f1.png")
+cute = pygame.image.load("cute.jpg")
 
 ghost1 = pygame.image.load('Pacman_red 1.png')
 ghost2 = pygame.image.load('Pacman_pink.png')
@@ -48,7 +48,7 @@ ghost2 = pygame.transform.scale(ghost2, (pm_size, pm_size))
 ghost3 = pygame.transform.scale(ghost3, (pm_size, pm_size))
 ghost4 = pygame.transform.scale(ghost4, (pm_size, pm_size))
 ghost5 = pygame.transform.scale(ghost1, (100, 100))
-backgr = pygame.transform.scale(backgr, (600, 670))
+cute = pygame.transform.scale(cute, (600 ,670))
 
 hat = pygame.transform.scale(hat, (80, 90))
 
