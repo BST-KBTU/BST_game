@@ -34,9 +34,9 @@ def get_index(x,y):
 	return index_x, index_y
 
 def menu():
-	pygame.mixer.init()
-	pygame.mixer.music.load('intro.mp3')
-	pygame.mixer.music.play(-1, 0.0)
+	#pygame.mixer.init()
+	#pygame.mixer.music.load('intro.mp3')
+	#pygame.mixer.music.play(-1, 0.0)
 
 	while True:
 		screen.fill((Yellow))
@@ -78,12 +78,23 @@ def second_page():
 		screen.blit(bghost4, (40, 520))
 		screen.blit(bpacman, (40, 120))
 
-		draw_text('CHARACTERS', screen, [180, 40], 32, White, Font)
+		draw_text('CHARACTERS', screen, [20, 50], 32, White, Font)
+		draw_text('SETTINGS', screen, [320, 50], 32, White, Font)
 		draw_text('PACMAN', screen, [120, 130], 24, White, Font)
 		draw_text('GOHA', screen, [120, 230], 24, White, Font)
 		draw_text('PINKY', screen, [120, 330], 24, White, Font)
 		draw_text('TINKY', screen, [120, 430], 24, White, Font)
 		draw_text('WINKY', screen, [120, 530], 24, White, Font)
+		draw_text('Press K_UP to go up', screen, [300, 130], 18, White, Font)
+		draw_text('Press K_DOWN to go down', screen, [300, 180], 18, White, Font)
+		draw_text('Press K_RIGHT to go right', screen, [300, 230], 18, White, Font)
+		draw_text('Press K_LEFT to go left', screen, [300, 280], 18, White, Font)
+		draw_text('Press BACKSPACE to go to the MENU', screen, [10, 10], 18, White, Font)
+		draw_text('Yellow coin = 10 points', screen, [300, 340], 16, White, Font)
+		draw_text('Yellow', screen, [300, 340], 16, Yellow, Font)
+		draw_text('Pink coin = 100 points', screen, [300, 370], 16, White, Font)
+		draw_text('Pink', screen, [300, 370], 16, Pink, Font)
+		draw_text('Max amount of points is 3530', screen, [300, 400], 16, White, Font)
 		pygame.display.update()
 
 def F():
