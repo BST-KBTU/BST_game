@@ -308,7 +308,7 @@ def game():
 		if len((lives)) == 0:
 			snd1.stop()
 			pygame.mixer.init()
-			pygame.mixer.music.load('ahh.mp3')
+			pygame.mixer.music.load('hehehe.mp3')
 			pygame.mixer.music.play(1, 0.0)
 			lose()
 		
